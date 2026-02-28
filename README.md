@@ -1,7 +1,7 @@
 # Carlos Posts
 
 Problem it solves:
-I publish content in two places — a Hugo blog (reads Markdown) and a JS portfolio (can't read Markdown, needs JSON).
+I publish content in two places: a Hugo blog (reads Markdown) and a JS portfolio (can't read Markdown, needs JSON).
 
  Without this repo, every new post required:
 -  ✗ Writing the post in Markdown for the blog
