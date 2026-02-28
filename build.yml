@@ -4,19 +4,18 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    name: Generate JSON & Build Hugo
+    name: Generate JSON + Deploy to Blog & Portfolio
 
     steps:
-      - name: Checkout repository
+      # ── 1. Checkout do repositório fonte (posts_carlos) ──
+      - name: Checkout posts_carlos
         uses: actions/checkout@v4
 
+      # ── 2. Gerar posts.json ──
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -25,23 +24,59 @@ jobs:
       - name: Generate posts.json
         run: node scripts/generate-json.js
 
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v3
+      # ──────────────────────────────────────────────────────
+      # DEPLOY 1 — Blog Hugo (repositório separado)
+      # Copia os arquivos .md para o repo do blog
+      # ──────────────────────────────────────────────────────
+      - name: Checkout blog Hugo repo
+        uses: actions/checkout@v4
         with:
-          hugo-version: "latest"
-          extended: true
+          repository: carlossucredev/carlos-learn
+          token: ${{ secrets.PAT_TOKEN }}
+          path: hugo-blog-repo
 
-      - name: Build Hugo site
-        run: hugo --minify
-        # Hugo outputs to ./public by default
+      - name: Copy Markdown posts to Hugo blog
+        run: |
+          # Copia todos os .md para a pasta content/posts do blog
+          mkdir -p hugo-blog-repo/content/posts
+          cp content/posts/*.md hugo-blog-repo/content/posts/
 
-      - name: Copy posts.json into Hugo public folder
-        run: cp dist/posts.json public/posts.json
+          # Copia a página about, se existir
+          mkdir -p hugo-blog-repo/content/pages
+          cp content/pages/*.md hugo-blog-repo/content/pages/ 2>/dev/null || true
 
-      - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v4
+      - name: Commit and push to Hugo blog repo
+        run: |
+          cd hugo-blog-repo
+          git config user.name "posts-carlos-bot"
+          git config user.email "bot@posts-carlos"
+          git add .
+          # Só faz commit se houver mudanças
+          git diff --cached --quiet || git commit -m "sync: posts from posts_carlos [$(date +'%Y-%m-%d %H:%M')]"
+          git push
+
+      # ──────────────────────────────────────────────────────
+      # DEPLOY 2 — Portfolio (repositório separado)
+      # Copia o posts.json para o repo do portfolio
+      # ──────────────────────────────────────────────────────
+      - name: Checkout portfolio repo
+        uses: actions/checkout@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          cname: ""  # Set your custom domain here if applicable
+          repository: carlossucredev/carlossucredev.github.io 
+          token: ${{ secrets.PAT_TOKEN }}
+          path: portfolio-repo
+
+      - name: Copy posts.json to portfolio repo
+        run: |
+          # Ajuste o caminho se o seu portfolio usa outra pasta
+          mkdir -p portfolio-repo/api
+          cp dist/posts.json portfolio-repo/api/posts.json
+
+      - name: Commit and push to portfolio repo
+        run: |
+          cd portfolio-repo
+          git config user.name "posts-carlos-bot"
+          git config user.email "bot@posts-carlos"
+          git add .
+          git diff --cached --quiet || git commit -m "sync: posts.json from posts_carlos [$(date +'%Y-%m-%d %H:%M')]"
+          git push
