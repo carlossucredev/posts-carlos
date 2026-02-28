@@ -1,4 +1,4 @@
-# Carlos Posts
+# Posts Carlos
 
 Problem it solves:
 I publish content in two places: a Hugo blog (reads Markdown) and a JS portfolio (can't read Markdown, needs JSON).
