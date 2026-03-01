@@ -16,3 +16,21 @@ I have always answered these questions based on my context and every time these 
 ## What is the best decision?
 
 Now I should make a decision "studying or not at university?" and the purpose of this post is not make a decision but rather learn how to think, what to think to reach the best decision.
+
+And here's what I've learned after making all those decisions — moving cities, changing sports, leaving a country:
+
+There is no universally best decision. There is only the best decision **for your context, right now, with what you have.**
+
+So when I ask myself "university or not?" I stop trying to find the right answer and start asking better questions:
+
+What door specifically does a degree open for me that I can't open another way? What's the real cost — not just money, but time, opportunity, momentum? And honestly — am I considering this because I believe it moves me forward, or because I'm afraid of what people will think if I don't?
+
+That last question is the one that cuts through everything.
+
+I've seen people with CS degrees unemployed and people without them leading engineering teams. The degree was never the variable. The variable was always **how clearly they understood what they were building toward.**
+
+So no, I'm not going to tell you whether to go to university or not. That's not my decision to make.
+
+What I will tell you is this: if the answer isn't clear yet, you're probably still asking the wrong question.
+
+Keep asking. You'll get there.
